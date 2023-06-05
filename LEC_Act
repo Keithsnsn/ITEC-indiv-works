@@ -1,0 +1,58 @@
+function convertNumberToWord(num) {
+  const units = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
+  const teens = ['ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+  const tens = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+  const scales = ['', 'thousand', 'million', 'billion', 'trillion'];
+
+  if (num === 0) {
+    return 'zero';
+  }
+
+  function convertLessThanThousand(n) {
+    let result = '';
+
+    if (n >= 100) {
+      result += units[Math.floor(n / 100)] + ' hundred ';
+      n %= 100;
+    }
+
+    if (n >= 20) {
+      result += tens[Math.floor(n / 10)] + ' ';
+      n %= 10;
+    }
+
+    if (n > 0) {
+      if (n < 10) {
+        result += units[n] + ' ';
+      } else {
+        result += teens[n - 10] + ' ';
+      }
+    }
+
+    return result.trim();
+  }
+
+  let words = '';
+  let scaleIndex = 0;
+
+  while (num > 0) {
+    if (num % 1000 !== 0) {
+      const word = convertLessThanThousand(num % 1000);
+      words = word + scales[scaleIndex] + ' ' + words;
+    }
+    num = Math.floor(num / 1000);
+    scaleIndex++;
+  }
+
+  return words.trim();
+}
+
+const input = prompt('Enter a number:');
+const num = parseInt(input);
+
+if (isNaN(num)) {
+  console.log('Invalid input. Please enter a valid number.');
+} else {
+  const wordRep = convertNumberToWord(num);
+  console.log(`The word representation of ${num} is: ${wordRep}`);
+}
